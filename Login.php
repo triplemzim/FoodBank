@@ -1,8 +1,8 @@
 <?php
 require "init.php";
 
-$user_name=$_POST["$user_name"];
-$pass= $_POST["$password"];
+$user_name=$_POST["user_name"];
+$pass= $_POST["password"];
 
 $sql_query= "select id from user where user_name like '$user_name' and password like '$pass';";
 
@@ -11,7 +11,7 @@ if(mysqli_num_rows($result)>0)
 {
 	$row= mysqli_fetch_assoc($result);
 	$id= $row["id"];
-	echo "Logged in: ".$id;
+	echo "Success Yay";
 }
 else
 {

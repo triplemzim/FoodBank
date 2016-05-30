@@ -1,8 +1,8 @@
 <?php
 require "init.php";
 $id=1;
-$user_name=$_POST["$user_name"];
-$pass= $_POST["$password"];
+$user_name=$_POST["user_name"];
+$pass= $_POST["password"];
 
 $sql_query= "insert into user values('$id','$user_name','$pass');";
 
