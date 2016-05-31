@@ -1,10 +1,10 @@
 <?php
 
-$dbname="testing";
-$main_user="admin";
-$main_user_pass="admin";
+$dbname="b9_18215737_pizzadb";
+$main_user="b9_18215737";
+$main_user_pass="pizza1234";
 
-$server_name="localhost";
+$server_name="sql309.byethost9.com";
 
 
 $connection_One= mysqli_connect($server_name, $main_user, $main_user_pass, $dbname);
