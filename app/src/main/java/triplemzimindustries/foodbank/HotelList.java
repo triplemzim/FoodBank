@@ -10,9 +10,21 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class HotelList extends AppCompatActivity {
     ListView hotellist;
     Button cart;
+    JSONObject job;
+    JSONArray jar;
+    String jsonString;
+    List<String> hotels;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,8 +33,26 @@ public class HotelList extends AppCompatActivity {
        
         hotellist = (ListView) findViewById(R.id.hotellistView);
         cart = (Button) findViewById(R.id.btnCart);
-        
-        final String hotelNames[] = {"Star","Royal","Pizza King","Plate21","Korai Gost"};
+
+       /* jsonString = getIntent().getExtras().getString("Response");
+        try {
+            job = new JSONObject(jsonString);
+            jar = job.getJSONArray("Response");
+            hotels = new ArrayList<>();
+
+            int count = 0;
+
+            while(count<jar.length()){
+                JSONObject jo;
+                jo = jar.getJSONObject(count);
+                hotels.add(jo.getString("name"));
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }*/
+
+        final List<String> hotelNames = Arrays.asList("Star", "Royal", "Pizza King", "Plate21", "Korai Gost");
         ArrayAdapter adapter = new ArrayAdapter(this,R.layout.lvlayout,R.id.hoteltxtid,hotelNames);
 
         hotellist.setAdapter(adapter);
@@ -30,9 +60,9 @@ public class HotelList extends AppCompatActivity {
         hotellist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),"Clicked on "+hotelNames[position],Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Clicked on "+ hotelNames.get(position),Toast.LENGTH_SHORT).show();
                 Intent I = new Intent(HotelList.this,MenuList.class);
-                I.putExtra("HotelName",hotelNames[position]);
+                I.putExtra("HotelName", hotelNames.get(position));
                 startActivity(I);
             }
         });

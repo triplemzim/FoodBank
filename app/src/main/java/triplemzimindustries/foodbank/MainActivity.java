@@ -32,6 +32,7 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
 
     Button login;
     EditText usrName,Passwd;
+    String JsonString = new String();
     boolean loggedin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,10 +138,14 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
     public void processFinish(String output) {
         if(output.equals("success")){
             Intent I = new Intent(MainActivity.this,HotelList.class);
+            I.putExtra("Response",output);
             startActivity(I);
         }
         else{
-            Toast.makeText(MainActivity.this, output, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, output, Toast.LENGTH_LONG).show();
+            Intent I = new Intent(MainActivity.this,HotelList.class);
+            I.putExtra("Response",output);
+            startActivity(I);
         }
     }
 
@@ -173,15 +178,16 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
                 InputStream instream = httpurlcon.getInputStream();
                 BufferedReader rd = new BufferedReader(new InputStreamReader(instream,"UTF-8"));
 
-                test = rd.readLine();
+                StringBuilder stringBuilder = new StringBuilder();
+                while((JsonString = rd.readLine()) !=null){
+                    stringBuilder.append(JsonString + "\n");
+                }
                 instream.close();
                 rd.close();
 
                 httpurlcon.disconnect();
 
-                if(test.equals("success")){
-                    return "success";
-                }
+                return stringBuilder.toString().trim();
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
