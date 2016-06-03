@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,8 +29,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.List;
 
 public class MainActivity  extends AppCompatActivity implements AsyncResponse {
 
@@ -41,6 +40,7 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
     JSONObject job;
     JSONArray jar;
     boolean loggedin;
+    List<JSONObject> rcvList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,51 +77,50 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
             e.printStackTrace();
         }
 
-//        String url_addr;
-//        url_addr = "http://pizza.byethost9.com/Login.php";
-//        try {
-//            URL url = new URL(url_addr);
-//            Toast.makeText(MainActivity.this, "came here", Toast.LENGTH_LONG).show();
-//            HttpURLConnection httpurlcon = (HttpURLConnection) url.openConnection();
+
+        BackgroundWork bckW = new BackgroundWork();
+        rcvList = bckW.initialize(MainActivity.this,"login",data);
+        Toast.makeText(MainActivity.this, "main: "+rcvList.toString(), Toast.LENGTH_SHORT).show();
+        //if(true) return;
+        String retString = null;
+//        for(JSONObject jo: rcvList){
+//            try {
+//                retString = jo.getString("status");
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
 //
-//            httpurlcon.setRequestMethod("POST");
-//            httpurlcon.setDoOutput(true);
-//
-//            OutputStream outstream = httpurlcon.getOutputStream();
-//            if(outstream == null){
-//                Toast.makeText(MainActivity.this, "got null", Toast.LENGTH_SHORT).show();
-//            }
-//            BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(outstream,"UTF-8"));
-//            wr.write(data);
-//            wr.flush();
-//            wr.close();
-//            outstream.close();
-
-//            InputStream instream = httpurlcon.getInputStream();
-//            BufferedReader rd = new BufferedReader(new InputStreamReader(instream,"UTF-8"));
-
-//            String test = rd.readLine();
-//            if(test.equals("success")){
-//                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
-//            }
-//            else{
-//                Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-//            }
-
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        } catch (ProtocolException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
 //        }
+        try {
+            retString = rcvList.get(0).getString("status");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(MainActivity.this, "MainActivity: "+retString, Toast.LENGTH_SHORT).show();
+        //if(true) return;
+        if(retString.equals("success")){
+            String usrid = "";
+            try {
+                usrid = rcvList.get(0).getString("customer_id");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(MainActivity.this, "Success"+"UserId: "+usrid, Toast.LENGTH_SHORT).show();
+            Intent I = new Intent(MainActivity.this,HotelList.class);
+            I.putExtra("customer_id",usrid);
+            startActivity(I);
+        }
+        else{
+            Toast.makeText(MainActivity.this, "Failed Login!", Toast.LENGTH_SHORT).show();
+        }
 
 
 
-
-        background_task bck = new background_task();
-        bck.delegate = this;
-        bck.execute(data);
+//        background_task bck = new background_task();
+//        bck.delegate = this;
+//        bck.execute(data);
 
 
 //        Intent I = new Intent(MainActivity.this,HotelList.class);
