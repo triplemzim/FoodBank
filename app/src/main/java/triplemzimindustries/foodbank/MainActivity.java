@@ -11,7 +11,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,6 +38,8 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
     Button login;
     EditText usrName,Passwd;
     String JsonString = new String();
+    JSONObject job;
+    JSONArray jar;
     boolean loggedin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +71,8 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
         passwd = Passwd.getText().toString();
 
         try {
-            data = URLEncoder.encode("username","UTF-8")+"="+URLEncoder.encode("password","UTF-8");
-            data += "&" + URLEncoder.encode(usrname,"UTF-8")+"="+URLEncoder.encode(passwd,"UTF-8");
+            data = URLEncoder.encode("username","UTF-8")+"="+URLEncoder.encode(usrname,"UTF-8");
+            data += "&" + URLEncoder.encode("password","UTF-8")+"="+URLEncoder.encode(passwd,"UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -136,13 +143,33 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
 
     @Override
     public void processFinish(String output) {
+        Toast.makeText(MainActivity.this, "Process Finish: "+output, Toast.LENGTH_LONG).show();
+        usrName.setText(output,TextView.BufferType.EDITABLE);
+        try {
+            job = new JSONObject(output);
+
+            jar = job.getJSONArray("server_response");
+            int count = 0;
+            int length = jar.length();
+            while(count < jar.length()){
+                JSONObject jo;
+                jo = jar.getJSONObject(count);
+                output = jo.getString("status");
+                count++;
+            }
+           // Toast.makeText(MainActivity.this, output, Toast.LENGTH_LONG).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
         if(output.equals("success")){
             Intent I = new Intent(MainActivity.this,HotelList.class);
             I.putExtra("Response",output);
             startActivity(I);
         }
         else{
-            Toast.makeText(MainActivity.this, output, Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "failed_me", Toast.LENGTH_LONG).show();
             Intent I = new Intent(MainActivity.this,HotelList.class);
             I.putExtra("Response",output);
             startActivity(I);
@@ -155,12 +182,12 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
 
         @Override
         protected void onPreExecute() {
-            url_addr = "http://pizza.byethost9.com/Login.php";
+            url_addr = "http://192.168.101.12/foodbank/login.php";
         }
 
         @Override
         protected String doInBackground(String... args) {
-            String data = null,test = "";
+            String data= null,test = "";
             data = args[0];
             try {
                 URL url = new URL(url_addr);
@@ -168,19 +195,29 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
 
                 httpurlcon.setRequestMethod("POST");
                 httpurlcon.setDoOutput(true);
+                httpurlcon.setDoInput(true);
+
+                //Toast.makeText(MainActivity.this, "paici", Toast.LENGTH_SHORT).show();
+
 
                 OutputStream outstream = httpurlcon.getOutputStream();
                 BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(outstream,"UTF-8"));
+
                 wr.write(data);
                 wr.flush();
                 wr.close();
                 outstream.close();
+
+               // usrName.setText("Output Completed", TextView.BufferType.EDITABLE);
+                //if(true) return data;
+               // if(true) return "{\"server_response\":[{\"status\":\"success\"}]}";
                 InputStream instream = httpurlcon.getInputStream();
-                BufferedReader rd = new BufferedReader(new InputStreamReader(instream,"UTF-8"));
+                BufferedReader rd = new BufferedReader(new InputStreamReader(instream));
 
                 StringBuilder stringBuilder = new StringBuilder();
                 while((JsonString = rd.readLine()) !=null){
                     stringBuilder.append(JsonString + "\n");
+
                 }
                 instream.close();
                 rd.close();
@@ -207,6 +244,7 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
 
         @Override
         protected void onPostExecute(String chk) {
+            //Toast.makeText(MainActivity.this, chk, Toast.LENGTH_SHORT).show();;
             delegate.processFinish(chk);
         }
     }
