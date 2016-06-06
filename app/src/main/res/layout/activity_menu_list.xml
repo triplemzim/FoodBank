@@ -10,12 +10,14 @@
     tools:context="triplemzimindustries.foodbank.MenuList">
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:id="@+id/menulistView"
+
+        android:layout_alignParentTop="true"
         android:layout_above="@+id/btnCart"
-        android:layout_alignRight="@+id/btnCart"
-        android:layout_alignEnd="@+id/btnCart" />
+        android:layout_alignLeft="@+id/txtQuantity"
+        android:layout_alignStart="@+id/txtQuantity" />
 
     <Button
         android:layout_width="50dp"
@@ -26,4 +28,21 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:onClick="gotocart"/>
+
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtQuantity"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="122dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Quantity"
+        android:id="@+id/btnSubmit"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="submit_quantity"/>
 </RelativeLayout>

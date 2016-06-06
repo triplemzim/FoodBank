@@ -36,7 +36,9 @@ public class BackgroundWork implements AsyncResponse {
     Activity thatActivity;
 
     String JsonString = null;
-    String myURL = "http://10.202.48.151/foodbank/login.php";
+    public static String myURL = "";
+    public static String commonURL = "http://10.202.48.151/foodbank/";
+//    String myUrl = "hhtp://192.168";
     public List<JSONObject> ret;
     public List<JSONObject> initialize(Activity thatAct,String type, String rcvData){
         thatActivity = thatAct;
@@ -50,14 +52,7 @@ public class BackgroundWork implements AsyncResponse {
         bck.execute(rcvData);
 
 
-        //if(true) return ret;
-//        int count =0;
-//        while(true){
-//            for(int i=0;i<100000000;i++){}
-//            Toast.makeText(thatActivity, Integer.toString(count)+" "+bck.getStatus().toString(), Toast.LENGTH_SHORT).show();
-//            count++;
-//            if(count==15) break;
-//        }
+
         try {
             bck.get();
             Toast.makeText(thatActivity, bck.getStatus().toString(), Toast.LENGTH_SHORT).show();

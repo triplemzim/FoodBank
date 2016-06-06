@@ -34,6 +34,8 @@ import java.util.List;
 
 public class MainActivity  extends AppCompatActivity implements AsyncResponse {
 
+    public static String customer_id;
+    public static String hotel_name;
     Button login;
     EditText usrName,Passwd;
     String JsonString = new String();
@@ -50,6 +52,11 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
         login = (Button) findViewById(R.id.btnLogin);
         login.setEnabled(false);
 
+        usrName.setText("");
+        Passwd.setText("");
+        //skipping this activity
+//        Intent I = new Intent(MainActivity.this,HotelList.class);
+//        startActivity(I);
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -79,6 +86,7 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
 
 
         BackgroundWork bckW = new BackgroundWork();
+        bckW.myURL = bckW.commonURL+"login.php";
         rcvList = bckW.initialize(MainActivity.this,"login",data);
         Toast.makeText(MainActivity.this, "main: "+rcvList.toString(), Toast.LENGTH_SHORT).show();
         //if(true) return;
@@ -103,6 +111,7 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
             String usrid = "";
             try {
                 usrid = rcvList.get(0).getString("customer_id");
+                this.customer_id = usrid;
 
             } catch (JSONException e) {
                 e.printStackTrace();
