@@ -1,5 +1,6 @@
 package triplemzimindustries.foodbank;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HotelList extends AppCompatActivity {
-
+    ProgressDialog progress;
     ListView hotellist;
     Button cart;
     JSONObject job;
@@ -37,27 +38,14 @@ public class HotelList extends AppCompatActivity {
        
         hotellist = (ListView) findViewById(R.id.hotellistView);
         cart = (Button) findViewById(R.id.btnCart);
-
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Retrieving Hotel names.\nPlease wait...");
+        progress.show();
         retrieve_hotel_names();
-       /* jsonString = getIntent().getExtras().getString("Response");
-        try {
-            job = new JSONObject(jsonString);
-            jar = job.getJSONArray("Response");
-            hotels = new ArrayList<>();
+        progress.dismiss();
 
-            int count = 0;
-
-            while(count<jar.length()){
-                JSONObject jo;
-                jo = jar.getJSONObject(count);
-                hotels.add(jo.getString("name"));
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
-
-        Toast.makeText(HotelList.this,"Showing hotel no: "+ Integer.toString(hotels.size()), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(HotelList.this,"Showing hotel no: "+ Integer.toString(hotels.size()), Toast.LENGTH_SHORT).show();
         final List<String> hotelNames = Arrays.asList("Star", "Royal", "Pizza King", "Plate21", "Korai Gost");
         ArrayAdapter adapter = new ArrayAdapter(this,R.layout.lvlayout,R.id.hoteltxtid,hotels);
 
@@ -66,7 +54,7 @@ public class HotelList extends AppCompatActivity {
         hotellist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),"Clicked on "+ hotels.get(position),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),"Clicked on "+ hotels.get(position),Toast.LENGTH_SHORT).show();
                 Intent I = new Intent(HotelList.this,MenuList.class);
 //                I.putExtra("HotelName", hotelNames.get(position));
                 MainActivity.hotel_name = hotels.get(position);
@@ -78,7 +66,7 @@ public class HotelList extends AppCompatActivity {
 
     }
     public void gotocart(View view){
-        Toast.makeText(HotelList.this, "Clicked on cart from Hotel List", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(HotelList.this, "Clicked on cart from Hotel List", Toast.LENGTH_SHORT).show();
         Intent I = new Intent(HotelList.this,Cart.class);
         startActivity(I);
     }

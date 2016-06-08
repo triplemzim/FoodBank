@@ -1,5 +1,6 @@
 package triplemzimindustries.foodbank;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -33,7 +34,7 @@ import java.net.URLEncoder;
 import java.util.List;
 
 public class MainActivity  extends AppCompatActivity implements AsyncResponse {
-
+    ProgressDialog progress ;
     public static String customer_id;
     public static String hotel_name;
     Button login;
@@ -54,6 +55,10 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
 
         usrName.setText("");
         Passwd.setText("");
+        progress = new ProgressDialog(this);
+        progress.setTitle("Validating");
+        progress.setMessage("Please wait...");
+
         //skipping this activity
 //        Intent I = new Intent(MainActivity.this,HotelList.class);
 //        startActivity(I);
@@ -71,6 +76,8 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
     public void check_authorization(View view){
 //        Intent I = new Intent(MainActivity.this,HotelList.class);
 //        startActivity(I);
+
+        progress.show();
         String usrname,passwd,data = null;
 
 
@@ -88,7 +95,7 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
         BackgroundWork bckW = new BackgroundWork();
         bckW.myURL = bckW.commonURL+"login.php";
         rcvList = bckW.initialize(MainActivity.this,"login",data);
-        Toast.makeText(MainActivity.this, "main: "+rcvList.toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MainActivity.this, "main: "+rcvList.toString(), Toast.LENGTH_SHORT).show();
         //if(true) return;
         String retString = null;
 //        for(JSONObject jo: rcvList){
@@ -105,8 +112,9 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
             e.printStackTrace();
         }
 
-        Toast.makeText(MainActivity.this, "MainActivity: "+retString, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MainActivity.this, "MainActivity: "+retString, Toast.LENGTH_SHORT).show();
         //if(true) return;
+        progress.dismiss();
         if(retString.equals("success")){
             String usrid = "";
             try {
@@ -116,7 +124,8 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(MainActivity.this, "Success"+"UserId: "+usrid, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "Success"+"UserId: "+usrid, Toast.LENGTH_SHORT).show();
+
             Intent I = new Intent(MainActivity.this,HotelList.class);
             I.putExtra("customer_id",usrid);
             startActivity(I);
@@ -124,26 +133,6 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
         else{
             Toast.makeText(MainActivity.this, "Failed Login!", Toast.LENGTH_SHORT).show();
         }
-
-
-
-//        background_task bck = new background_task();
-//        bck.delegate = this;
-//        bck.execute(data);
-
-
-//        Intent I = new Intent(MainActivity.this,HotelList.class);
-//        startActivity(I);
-//        Toast.makeText(MainActivity.this, "came here", Toast.LENGTH_LONG).show();
-
-//        String ret = null;
-//
-//        if(ret.equals("success")){
-//
-//            Intent I = new Intent(MainActivity.this,HotelList.class);
-//            startActivity(I);
-//        }
-
 
 
 
@@ -257,76 +246,5 @@ public class MainActivity  extends AppCompatActivity implements AsyncResponse {
         }
     }
 
-/*    public class background_login extends AsyncTask<Void,Void,Void>{
-        String url_addr;
-        public AsyncResponse delegate = null;
-        @Override
-        protected void onPreExecute() {
-            url_addr = "http://pizza.byethost9.com/Login.php";
-//            url_addr = "http://www.android.com";
-        }
 
-        @Override
-        protected Void doInBackground(Void... args) {
-            String data = null;
-//            data = args[0];
-
-            try {
-                URL url = new URL(url_addr);
-
-                Toast.makeText(MainActivity.this, "came here", Toast.LENGTH_LONG).show();
-//                if(true) return false;
-                HttpURLConnection httpurlcon = (HttpURLConnection) url.openConnection();
-
-                httpurlcon.setRequestMethod("POST");
-                httpurlcon.setDoOutput(true);
-                Toast.makeText(MainActivity.this, "came here", Toast.LENGTH_LONG).show();
-
-//                OutputStream outstream = httpurlcon.getOutputStream();
-//                BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(outstream,"UTF-8"));
-//                wr.write(data);
-//                wr.flush();
-//                wr.close();
-//                outstream.close();
-//
-//                InputStream instream = httpurlcon.getInputStream();
-//                BufferedReader rd = new BufferedReader(new InputStreamReader(instream,"UTF-8"));
-//
-//                String test = rd.readLine();
-//                if(test.equals("success")){
-//                    return true;
-//                }
-
-
-
-            } catch (MalformedURLException e) {
-
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-//            return "Success";
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(Void avoid) {
-            super.onPostExecute(avoid);
-//            if(chk){
-//                Toast.makeText(getApplicationContext(), "Login Successfull!", Toast.LENGTH_SHORT).show();
-//                delegate.processFinish("success");
-//            }
-//            else{
-//                Toast.makeText(getApplicationContext(), "Login Failed! Try Again!", Toast.LENGTH_SHORT).show();
-//                delegate.processFinish("fail");
-//            }
-
-        }
-    }*/
 }

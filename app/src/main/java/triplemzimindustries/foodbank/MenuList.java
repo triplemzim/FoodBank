@@ -1,5 +1,6 @@
 package triplemzimindustries.foodbank;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class MenuList extends AppCompatActivity {
+    ProgressDialog progress;
     Food tempFood;
     public static Vector<String> v;
     Button cart;
@@ -40,10 +42,15 @@ public class MenuList extends AppCompatActivity {
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
         qText.setVisibility(View.INVISIBLE);
         btnSubmit.setVisibility(View.INVISIBLE);
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Retrieving menu...\nPlease wait...");
 
+        progress.show();
         retrieve_food_names();
+        progress.dismiss();
 
-        Toast.makeText(MenuList.this, "Food no: "+Integer.toString(foods.size()), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MenuList.this, "Food no: "+Integer.toString(foods.size()), Toast.LENGTH_SHORT).show();
         String food[] = {"Hydrabadi Biriani\nPrice: 400TK\n\n","Beef Biriyani\nPrice: 120TK\n\n","Tehari (FULL)\nPrice: 120TK\n\n","Beef Burger\nPrice: 80TK\n\n","Chicken Burger\nPrice: 70TK\n\n"};
         ArrayAdapter adapter = new ArrayAdapter(this,R.layout.menulayout,R.id.foodtxtid,foods);
         menu.setAdapter(adapter);
@@ -123,14 +130,14 @@ public class MenuList extends AppCompatActivity {
         String q;
         int val  = Integer.parseInt(qText.getText().toString());
         tempFood.quantity = val;
-        Cart.addedfood.add(tempFood);
+        if(val>0) Cart.addedfood.add(tempFood);
 
         qText.setText("");
 
     }
 
     public void gotocart(View view){
-        Toast.makeText(MenuList.this, "Clicked on cart from menulist", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MenuList.this, "Clicked on cart from menulist", Toast.LENGTH_SHORT).show();
         Intent I = new Intent(MenuList.this,Cart.class);
         startActivity(I);
     }

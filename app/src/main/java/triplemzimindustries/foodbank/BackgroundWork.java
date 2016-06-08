@@ -37,7 +37,9 @@ public class BackgroundWork implements AsyncResponse {
 
     String JsonString = null;
     public static String myURL = "";
-    public static String commonURL = "http://10.202.48.151/foodbank/";
+    //public static String commonURL = "http://192.168.101.12/foodbank/";  //from baidu
+    //public static String commonURL = "http://10.202.48.151/foodbank/";
+    public static String commonURL = "http://foodfoodee.coolpage.biz/";
 //    String myUrl = "hhtp://192.168";
     public List<JSONObject> ret;
     public List<JSONObject> initialize(Activity thatAct,String type, String rcvData){
@@ -55,13 +57,13 @@ public class BackgroundWork implements AsyncResponse {
 
         try {
             bck.get();
-            Toast.makeText(thatActivity, bck.getStatus().toString(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(thatActivity, bck.getStatus().toString(), Toast.LENGTH_SHORT).show();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        Toast.makeText( thatActivity,"Task finished", Toast.LENGTH_SHORT).show();
+//        Toast.makeText( thatActivity,"Task finished", Toast.LENGTH_SHORT).show();
 
         return ret;
 

@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -37,13 +39,13 @@ public class Cart extends AppCompatActivity {
         int count =0;
         sum = 0;
         while(count<addedfood.size()){
-            String temp="";
+            String temp="\n";
             Food tempFood = addedfood.get(count);
-            temp = tempFood.name;
+            temp += tempFood.name;
             temp+="\nMenu Type: "+tempFood.menuType;
             temp+="\nPrice: "+tempFood.price;
             temp+="\nQuantity: "+Integer.toString(tempFood.quantity);
-            temp+="\n\n";
+            temp+="\n";
             foodlist.add(temp);
             count++;
             sum += Integer.parseInt(tempFood.price)*tempFood.quantity;
@@ -55,10 +57,42 @@ public class Cart extends AppCompatActivity {
 
     }
     public void complete_checkout(View view){
-        Toast.makeText(Cart.this, "Checkout Complete", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(Cart.this, "Checkout Complete", Toast.LENGTH_SHORT).show();
+
+        if(addedfood.size()>0) push_data();
+
         addedfood.clear();
         Intent I = new Intent(Cart.this,HotelList.class);
         startActivity(I);
 
+    }
+    public void push_data(){
+        String data,orderedfood="";
+        try {
+            data = URLEncoder.encode("customer_id","UTF-8")+"="+URLEncoder.encode(MainActivity.customer_id,"UTF-8");
+            int count =1 ;
+            orderedfood = addedfood.get(0).id;
+
+
+            while(addedfood.size()>count){
+                orderedfood+="-";
+                orderedfood+=addedfood.get(count).id;
+                count++;
+            }
+
+            data += "&"+URLEncoder.encode("orderstring","UTF-8")+"="+URLEncoder.encode(orderedfood,"UTF-8");
+            data += "&"+URLEncoder.encode("price","UTF-8")+"="+URLEncoder.encode(Integer.toString(sum),"UTF-8");
+
+            BackgroundWork bckw = new BackgroundWork();
+            bckw.myURL = bckw.commonURL+"insert_into_transaction.php";
+            bckw.initialize(Cart.this,"normal",data);
+            Toast.makeText(Cart.this, "Order Placed\nThank you!", Toast.LENGTH_SHORT).show();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+    public void activity_history(View view){
+        Intent I = new Intent(Cart.this,History.class);
+        startActivity(I);
     }
 }
