@@ -1,0 +1,4 @@
+server: sql6.freemysqlhosting.net
+name: sql6121899
+username: sql6121899 
+password: ZHArMSmepE

@@ -1,0 +1,12 @@
+foodbank.comule.com
+
+user: a3809895
+email: rafi.buet12@gmail.com
+password: food123
+
+
+mysql database:
+
+mysql database name: a9116211_pizza
+mysql user name: a9116211_pizza
+password: food123
